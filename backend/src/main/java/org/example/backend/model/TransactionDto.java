@@ -8,7 +8,8 @@ public record TransactionDto (
         String name,
         LocalDate date,
         Double amount,
+        Account account,
         String description,
         Category category,
-        Account account
+        TransactionType type
 ) {}

@@ -28,7 +28,8 @@ public class TransactionService {
                 transactionDto.amount(),
                 transactionDto.account(),
                 transactionDto.description(),
-                transactionDto.category());
+                transactionDto.category(),
+                transactionDto.type());
         return transactionRepository.save(transaction);
     }
 
@@ -40,7 +41,8 @@ public class TransactionService {
                 .withAmount(updateTransaction.amount())
                 .withAccount(updateTransaction.account())
                 .withDescription(updateTransaction.description())
-                .withCategory(updateTransaction.category());
+                .withCategory(updateTransaction.category())
+                .withType(updateTransaction.type());
                 return transactionRepository.save(transaction);
     }
     public void deleteTransaction(String id) {

@@ -12,5 +12,6 @@ public record Transaction (
         Double amount,
         Account account,
         String description,
-        Category category)
+        Category category,
+        TransactionType type)
 {}
