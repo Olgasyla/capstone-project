@@ -14,7 +14,11 @@ public enum Category {
     TRAVEL("Travel"),
     ENTERTAINMENT("Entertainment"),
     GIFTS("Gifts"),
-    EMERGENCY("Emergency Fund");
+    EMERGENCY("Emergency Fund"),
+    SALARY("Salary"),
+    CHILD_BENEFIT("Child Benefit"),
+    OTHER("Other")
+            ;
 
 
     private final String categoryValue;

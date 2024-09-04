@@ -3,6 +3,7 @@ package org.example.backend.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.model.Transaction;
 import org.example.backend.model.TransactionDto;
+import org.example.backend.model.TransactionType;
 import org.example.backend.service.TransactionService;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,15 @@ public class TransactionController {
         transactionService.deleteTransaction(id);
     }
 
+    @GetMapping("/type/{type}")
+    public List<Transaction> getTransactionsByType(@PathVariable TransactionType type) {
+        return transactionService.findTransactionsByType(type);
+    }
+    @GetMapping("/month/{month}/year/{year}")
+    public List<TransactionDto> getTransactionsByMonth(
+            @PathVariable int month,
+            @PathVariable int year) {
+        return transactionService.getTransactionsByMonth(month, year);
+    }
+    }
 
-
-}

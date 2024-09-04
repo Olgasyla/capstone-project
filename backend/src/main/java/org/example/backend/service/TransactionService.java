@@ -3,10 +3,15 @@ package org.example.backend.service;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.model.Transaction;
 import org.example.backend.model.TransactionDto;
+import org.example.backend.model.TransactionType;
 import org.example.backend.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.NoSuchElementException;
+
 
 @RequiredArgsConstructor
 @Service
@@ -47,5 +52,28 @@ public class TransactionService {
     }
     public void deleteTransaction(String id) {
         transactionRepository.deleteById(id);
+    }
+    public List<Transaction> findTransactionsByType(TransactionType type) {
+        return transactionRepository.findAll().stream()
+                .filter(transaction -> transaction.type() == type)
+                .toList();
+    }
+    public List<TransactionDto> getTransactionsByMonth(int month, int year) {
+        YearMonth yearMonth = YearMonth.of(year, month);
+        LocalDate startDate = yearMonth.atDay(1);
+        LocalDate endDate = yearMonth.atEndOfMonth();
+
+        return transactionRepository.findAllByDateBetween(startDate, endDate)
+                .stream()
+                .map(transaction -> new TransactionDto(
+                        transaction.name(),
+                        transaction.date(),
+                        transaction.amount(),
+                        transaction.account(),
+                        transaction.description(),
+                        transaction.category(),
+                        transaction.type()
+                ))
+                .toList();
     }
 }
