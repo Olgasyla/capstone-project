@@ -6,7 +6,10 @@ import org.example.backend.service.IdService;
 import org.example.backend.service.TransactionService;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -94,4 +97,47 @@ class TransactionServiceTest {
         doNothing().when(transactionRepository).deleteById("2");
         transactionRepository.deleteById("2");
         verify(transactionRepository).deleteById("2");
-    }}
+    }
+    @Test
+    void getTransactionsByMonthTest() {
+        // GIVEN
+        Instant startDate = YearMonth.of(2024, 9).atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant().atZone(ZoneId.systemDefault()).toInstant().minusSeconds(1);
+        Instant endDate = YearMonth.of(2024, 9).atEndOfMonth().atTime(23, 59, 58).atZone(ZoneId.systemDefault()).toInstant();
+
+        Transaction transaction1 = new Transaction("1", "Food", LocalDate.parse("2024-09-01"), 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE);
+        Transaction transaction2 = new Transaction("2", "Kleidung", LocalDate.parse("2024-09-05"), 75.0, Account.BANK, "Zara", Category.CLOTHES, TransactionType.EXPENSE);
+
+        List<Transaction> transactions = List.of(transaction1, transaction2);
+
+        when(transactionRepository.findAllByDateBetween(startDate, endDate)).thenReturn(transactions);
+
+        // WHEN
+        List<TransactionDto> actual = transactionService.getTransactionsByMonth(9, 2024);
+
+        // THEN
+        List<TransactionDto> expected = List.of(
+                new TransactionDto("Food", LocalDate.parse("2024-09-01"), 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE),
+                new TransactionDto("Kleidung", LocalDate.parse("2024-09-05"), 75.0, Account.BANK, "Zara", Category.CLOTHES, TransactionType.EXPENSE)
+        );
+        verify(transactionRepository).findAllByDateBetween(startDate, endDate);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void findTransactionsByTypeTest() {
+        // GIVEN
+        Transaction transaction1 = new Transaction("1", "Food", localDate, 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE);
+        Transaction transaction2 = new Transaction("2", "Salary", LocalDate.parse("2024-08-25"), 1500.0, Account.BANK, "Work", Category.OTHER, TransactionType.INCOME);
+
+        List<Transaction> transactions = List.of(transaction1, transaction2);
+        when(transactionRepository.findAll()).thenReturn(transactions);
+
+        // WHEN
+        List<Transaction> actual = transactionService.findTransactionsByType(TransactionType.EXPENSE);
+
+        // THEN
+        List<Transaction> expected = List.of(transaction1);
+        verify(transactionRepository).findAll();
+        assertEquals(expected, actual);
+    }
+    }

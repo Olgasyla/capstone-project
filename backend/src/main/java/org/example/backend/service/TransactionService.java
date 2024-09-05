@@ -7,8 +7,9 @@ import org.example.backend.model.TransactionType;
 import org.example.backend.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -60,8 +61,8 @@ public class TransactionService {
     }
     public List<TransactionDto> getTransactionsByMonth(int month, int year) {
         YearMonth yearMonth = YearMonth.of(year, month);
-        LocalDate startDate = yearMonth.atDay(1);
-        LocalDate endDate = yearMonth.atEndOfMonth();
+        Instant startDate = yearMonth.atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant().atZone(ZoneId.systemDefault()).toInstant().minusSeconds(1);
+        Instant endDate = yearMonth.atEndOfMonth().atTime(23,59,58).atZone(ZoneId.systemDefault()).toInstant();
 
         return transactionRepository.findAllByDateBetween(startDate, endDate)
                 .stream()
@@ -76,4 +77,6 @@ public class TransactionService {
                 ))
                 .toList();
     }
-}
+
+    }
+
