@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -31,6 +30,8 @@ class TransactionControllerTest {
     TransactionRepository transactionRepository;
 
     private final LocalDate localDate = LocalDate.parse("2024-09-01");
+
+
     @DirtiesContext
     @Test
     void getAllTransactionTest() throws Exception {
@@ -133,4 +134,93 @@ class TransactionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
     }
+    @DirtiesContext
+    @Test
+    void getTransactionsByMonthTest() throws Exception {
+        //GIVEN
+        transactionRepository.save(new Transaction("1", "Food", LocalDate.parse("2024-09-01"), 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE));
+        transactionRepository.save(new Transaction("2", "Clothes", LocalDate.parse("2024-09-05"), 75.0, Account.BANK, "Zara", Category.CLOTHES, TransactionType.EXPENSE));
+        transactionRepository.save(new Transaction("3", "Salary", LocalDate.parse("2024-08-25"), 1500.0, Account.BANK, "Work", Category.OTHER, TransactionType.INCOME));
+
+
+        long count = transactionRepository.count();
+        System.out.println("Transactions in DB: " + count);
+
+        //WHEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/transactions/month/9/year/2024"))
+                //THEN
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+              [
+              {
+                    "name": "Food",
+                    "date": "2024-09-01",
+                    "amount": 52.5,
+                    "account": "BANK",
+                    "description": "Aldi",
+                    "category": "FOOD",
+                    "type": "EXPENSE"
+                },
+                {
+                    "name": "Clothes",
+                    "date": "2024-09-05",
+                    "amount": 75.0,
+                    "account": "BANK",
+                    "description": "Zara",
+                    "category": "CLOTHES",
+                    "type": "EXPENSE"
+                }]
+            """));
+    }
+    @DirtiesContext
+    @Test
+    void getTransactionsByTypeTest() throws Exception {
+        // GIVEN
+        transactionRepository.save(new Transaction("1", "Food", LocalDate.parse("2024-09-01"), 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE));
+        transactionRepository.save(new Transaction("2", "Clothes", LocalDate.parse("2024-09-05"), 75.0, Account.BANK, "Zara", Category.CLOTHES, TransactionType.EXPENSE));
+        transactionRepository.save(new Transaction("3", "Salary", LocalDate.parse("2024-08-25"), 1500.0, Account.BANK, "Work", Category.OTHER, TransactionType.INCOME));
+
+        long count = transactionRepository.count();
+        System.out.println("Transactions in DB: " + count);
+
+        // WHEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/transactions/type/EXPENSE"))
+                // THEN
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+              [
+              {
+                    "name": "Food",
+                    "date": "2024-09-01",
+                    "amount": 52.5,
+                    "account": "BANK",
+                    "description": "Aldi",
+                    "category": "FOOD",
+                    "type": "EXPENSE"
+                },
+                {
+                    "name": "Clothes",
+                    "date": "2024-09-05",
+                    "amount": 75.0,
+                    "account": "BANK",
+                    "description": "Zara",
+                    "category": "CLOTHES",
+                    "type": "EXPENSE"
+                }]
+            """));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/transactions/type/INCOME"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+              [
+              {
+                    "name": "Salary",
+                    "date": "2024-08-25",
+                    "amount": 1500.0,
+                    "account": "BANK",
+                    "description": "Work",
+                    "category": "OTHER",
+                    "type": "INCOME"
+              }]
+            """));}
 }

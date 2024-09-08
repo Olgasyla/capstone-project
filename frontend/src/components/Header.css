@@ -1,0 +1,52 @@
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+}
+
+.header {
+    width: 200px; /* Уменьшаем ширину меню */
+    height: 100vh;
+    background-color: #f8f9fa;
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.header h1 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 24px;
+}
+
+.header nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.header nav ul li {
+    margin-bottom: 10px;
+}
+
+.header nav ul li a {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+.header nav ul li a:hover {
+    color: #0056b3;
+}
+
+.main-content {
+    margin-left: 260px; /* Увеличьте отступ слева */
+    padding: 20px;
+    width: calc(100% - 260px); /* Корректируем ширину основного контента */
+}
+
+
