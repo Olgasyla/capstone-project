@@ -24,7 +24,6 @@ export type TransactionType = 'INCOME' | 'EXPENSE';
 
 export type Transaction = {
     id: string,
-    name: string,
     date: string,
     amount: number,
     account: AccountType,
@@ -34,7 +33,6 @@ export type Transaction = {
 }
 
 export type TransactionDto = {
-    name: string,
     date: string,
     amount: number,
     account: AccountType,

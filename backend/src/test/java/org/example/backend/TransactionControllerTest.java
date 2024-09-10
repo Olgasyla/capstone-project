@@ -49,7 +49,7 @@ class TransactionControllerTest {
     @Test
     void getTransactionByIdTest() throws Exception {
         //GIVEN
-        transactionRepository.save(new Transaction("1", "Food", localDate, 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE));
+        transactionRepository.save(new Transaction("1", localDate, 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE));
         //WHEN
         mockMvc.perform(MockMvcRequestBuilders.get("/api/transactions/1"))
                 //THEN
@@ -57,7 +57,6 @@ class TransactionControllerTest {
                 .andExpect(content().json("""
 
       {     "id": "1",
-            "name": "Food",
             "date": "2024-09-01",
             "amount": 52.5,
             "account": "BANK",
@@ -74,7 +73,7 @@ class TransactionControllerTest {
         mockMvc.perform(post("/api/transactions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
-      {     "name": "Clothes",
+      {
             "date": "2024-09-01",
             "amount": 39.99,
             "account": "BANK",
@@ -85,7 +84,6 @@ class TransactionControllerTest {
 """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").exists())
-                .andExpect(jsonPath("$.name").value("Clothes"))
                 .andExpect(jsonPath("$.date").value("2024-09-01"))
                 .andExpect(jsonPath("$.amount").value(39.99))
                 .andExpect(jsonPath("$.account").value("BANK"))
@@ -97,12 +95,12 @@ class TransactionControllerTest {
     @Test
     void updateTransactionTest() throws Exception {
         //GIVEN
-        transactionRepository.save(new Transaction("1","Food", localDate, 32.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE));
+        transactionRepository.save(new Transaction("1", localDate, 32.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE));
         //WHEN
         mockMvc.perform(put("/api/transactions/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
-          { "name": "Food",
+          { 
             "date": "2024-09-01",
             "amount": 32.5,
             "account": "BANK",
@@ -113,7 +111,6 @@ class TransactionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
 {           "id": "1",
-            "name": "Food",
             "date": "2024-09-01",
             "amount": 32.5,
             "account": "BANK",
@@ -127,7 +124,7 @@ class TransactionControllerTest {
 
     @Test
     void deleteTransactionTest() throws Exception {
-        transactionRepository.save(new Transaction("1","Food", localDate, 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE));
+        transactionRepository.save(new Transaction("1", localDate, 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE));
         mockMvc.perform(delete("/api/transactions/1"))
             .andExpect(status().isOk());
         mockMvc.perform(get("/api/transactions"))
@@ -138,9 +135,9 @@ class TransactionControllerTest {
     @Test
     void getTransactionsByMonthTest() throws Exception {
         //GIVEN
-        transactionRepository.save(new Transaction("1", "Food", LocalDate.parse("2024-09-01"), 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE));
-        transactionRepository.save(new Transaction("2", "Clothes", LocalDate.parse("2024-09-05"), 75.0, Account.BANK, "Zara", Category.CLOTHES, TransactionType.EXPENSE));
-        transactionRepository.save(new Transaction("3", "Salary", LocalDate.parse("2024-08-25"), 1500.0, Account.BANK, "Work", Category.OTHER, TransactionType.INCOME));
+        transactionRepository.save(new Transaction("1", LocalDate.parse("2024-09-01"), 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE));
+        transactionRepository.save(new Transaction("2",  LocalDate.parse("2024-09-05"), 75.0, Account.BANK, "Zara", Category.CLOTHES, TransactionType.EXPENSE));
+        transactionRepository.save(new Transaction("3",  LocalDate.parse("2024-08-25"), 1500.0, Account.BANK, "Work", Category.OTHER, TransactionType.INCOME));
 
 
         long count = transactionRepository.count();
@@ -153,7 +150,6 @@ class TransactionControllerTest {
                 .andExpect(content().json("""
               [
               {
-                    "name": "Food",
                     "date": "2024-09-01",
                     "amount": 52.5,
                     "account": "BANK",
@@ -162,7 +158,6 @@ class TransactionControllerTest {
                     "type": "EXPENSE"
                 },
                 {
-                    "name": "Clothes",
                     "date": "2024-09-05",
                     "amount": 75.0,
                     "account": "BANK",
@@ -176,9 +171,9 @@ class TransactionControllerTest {
     @Test
     void getTransactionsByTypeTest() throws Exception {
         // GIVEN
-        transactionRepository.save(new Transaction("1", "Food", LocalDate.parse("2024-09-01"), 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE));
-        transactionRepository.save(new Transaction("2", "Clothes", LocalDate.parse("2024-09-05"), 75.0, Account.BANK, "Zara", Category.CLOTHES, TransactionType.EXPENSE));
-        transactionRepository.save(new Transaction("3", "Salary", LocalDate.parse("2024-08-25"), 1500.0, Account.BANK, "Work", Category.OTHER, TransactionType.INCOME));
+        transactionRepository.save(new Transaction("1", LocalDate.parse("2024-09-01"), 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE));
+        transactionRepository.save(new Transaction("2",  LocalDate.parse("2024-09-05"), 75.0, Account.BANK, "Zara", Category.CLOTHES, TransactionType.EXPENSE));
+        transactionRepository.save(new Transaction("3",  LocalDate.parse("2024-08-25"), 1500.0, Account.BANK, "Work", Category.OTHER, TransactionType.INCOME));
 
         long count = transactionRepository.count();
         System.out.println("Transactions in DB: " + count);
@@ -190,7 +185,6 @@ class TransactionControllerTest {
                 .andExpect(content().json("""
               [
               {
-                    "name": "Food",
                     "date": "2024-09-01",
                     "amount": 52.5,
                     "account": "BANK",
@@ -199,7 +193,6 @@ class TransactionControllerTest {
                     "type": "EXPENSE"
                 },
                 {
-                    "name": "Clothes",
                     "date": "2024-09-05",
                     "amount": 75.0,
                     "account": "BANK",
@@ -214,7 +207,6 @@ class TransactionControllerTest {
                 .andExpect(content().json("""
               [
               {
-                    "name": "Salary",
                     "date": "2024-08-25",
                     "amount": 1500.0,
                     "account": "BANK",

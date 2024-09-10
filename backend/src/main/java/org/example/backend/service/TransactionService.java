@@ -29,7 +29,6 @@ public class TransactionService {
     public Transaction saveNewTransaction(TransactionDto transactionDto) {
         Transaction transaction = new Transaction(
                 idService.randomId(),
-                transactionDto.name(),
                 transactionDto.date(),
                 transactionDto.amount(),
                 transactionDto.account(),
@@ -42,7 +41,6 @@ public class TransactionService {
     public Transaction updateTransaction(String id, TransactionDto updateTransaction) {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Transaction with id: " + id + "not found"))
-                .withName(updateTransaction.name())
                 .withDate(updateTransaction.date())
                 .withAmount(updateTransaction.amount())
                 .withAccount(updateTransaction.account())
@@ -67,7 +65,6 @@ public class TransactionService {
         return transactionRepository.findAllByDateBetween(startDate, endDate)
                 .stream()
                 .map(transaction -> new TransactionDto(
-                        transaction.name(),
                         transaction.date(),
                         transaction.amount(),
                         transaction.account(),
@@ -77,6 +74,5 @@ public class TransactionService {
                 ))
                 .toList();
     }
-
     }
 

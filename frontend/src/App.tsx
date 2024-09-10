@@ -1,14 +1,15 @@
 
-
 import Header from "./components/Header"
 import {useEffect, useState} from "react"
 import {Transaction, TransactionDto} from "./model/Transaction.ts"
 import axios from "axios";
 import {Route, Routes} from "react-router-dom"
 import AddTransactionPage from "./pages/AddTransactionPage.tsx"
-import Dashboard from "./components/Dashboard.tsx"
+import Dashboard from "./components/Header"
 import IncomePage from "./pages/IncomePage.tsx"
 import ExpensesPage from "./pages/ExpensesPage.tsx"
+import ReportsPage from "./pages/ReportsPage.tsx"
+
 
 
  export default function App() {
@@ -33,16 +34,16 @@ import ExpensesPage from "./pages/ExpensesPage.tsx"
      }
 
      const updateTransaction = (id: string, transaction: TransactionDto) => {
-         axios.put(`/api/transactions/${id}/update`, transaction)
+         axios.put(`/api/transactions/${id}`, transaction)  // Попробуйте без /update
              .then((response) => response.status === 200 && fetchTransactions())
-             .catch((error) => console.log(error.response.data))
+             .catch((error) => console.log(error.response.data));
      }
+
      const addTransaction = (transaction: TransactionDto) => {
          axios.post("/api/transactions", transaction)
              .then((response) => response.status === 200 && fetchTransactions())
              .catch((error) => console.log(error.message));
      };
-
 
      // const [searchInput, setSearchInput] = useState("")
      //
@@ -61,7 +62,7 @@ import ExpensesPage from "./pages/ExpensesPage.tsx"
             <Route path="/" element={<Dashboard />} />
 
             <Route path="transaction/add" element={<AddTransactionPage fetchTransactions={fetchTransactions}/>} />
-            {/*<Route path="/reports" element={<ReportsPage />} />*/}
+            <Route path="/reports" element={<ReportsPage />} />
             <Route path="/income" element={
                 <IncomePage
                     data={data}
