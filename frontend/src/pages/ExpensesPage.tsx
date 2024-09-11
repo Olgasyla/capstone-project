@@ -13,12 +13,7 @@ type ExpensesPageProps = {
     addTransaction: (transaction: TransactionDto) => void;
 };
 
-export default function ExpensesPage({
-                                         data,
-                                         deleteTransaction,
-                                         updateTransaction,
-                                         addTransaction,
-                                     }: ExpensesPageProps) {
+export default function ExpensesPage({data, deleteTransaction, updateTransaction, addTransaction,}: ExpensesPageProps) {
     const [isExpensesModalOpen, setIsExpensesModalOpen] = useState(false);
     const [isEditing, setIsEditing] = useState<string | null>(null);
     const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);

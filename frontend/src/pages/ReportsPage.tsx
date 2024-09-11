@@ -1,48 +1,47 @@
-import React, { useEffect, useState } from "react"
-import axios from "axios"
-import './ReportsPage.css'
-import {TransactionDto} from "../model/Transaction.ts";
-
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import './ReportsPage.css';
+import { Transaction } from "../model/Transaction.ts";
 
 export default function ReportsPage() {
-    const [transactions, setTransactions] = useState<TransactionDto[]>([])
-    const [currentBalance, setCurrentBalance] = useState<number>(0)
-    const [monthlyIncome, setMonthlyIncome] = useState<number>(0)
-    const [monthlyExpenses, setMonthlyExpenses] = useState<number>(0)
-    const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth() + 1)
-    const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear())
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
+    const [currentBalance, setCurrentBalance] = useState<number>(0);
+    const [monthlyIncome, setMonthlyIncome] = useState<number>(0);
+    const [monthlyExpenses, setMonthlyExpenses] = useState<number>(0);
+    const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth() + 1);
+    const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
 
     useEffect(() => {
-        fetchTransactions(selectedMonth, selectedYear)
-    }, [selectedMonth, selectedYear])
+        fetchTransactions(selectedMonth, selectedYear);
+    }, [selectedMonth, selectedYear]);
 
     const fetchTransactions = (month: number, year: number) => {
         axios.get(`/api/transactions/month/${month}/year/${year}`)
             .then(response => {
-                const data = response.data
-                setTransactions(data)
-                calculateStatistics(data)
+                const data: Transaction[] = response.data;
+                setTransactions(data);
+                calculateStatistics(data);
             })
             .catch(error => {
-                console.error("Error fetching transactions:", error)
-            })
-    }
+                console.error("Error fetching transactions:", error);
+            });
+    };
 
-    const calculateStatistics = (data: TransactionDto[]) => {
-        const income = data.filter(t => t.type === 'INCOME').reduce((acc, t) => acc + t.amount, 0)
-        const expenses = data.filter(t => t.type === 'EXPENSE').reduce((acc, t) => acc + t.amount, 0)
-        setMonthlyIncome(income)
-        setMonthlyExpenses(expenses)
-        setCurrentBalance(income - expenses)
-    }
+    const calculateStatistics = (data: Transaction[]) => {
+        const income = data.filter(t => t.type === 'INCOME').reduce((acc, t) => acc + t.amount, 0);
+        const expenses = data.filter(t => t.type === 'EXPENSE').reduce((acc, t) => acc + t.amount, 0);
+        setMonthlyIncome(income);
+        setMonthlyExpenses(expenses);
+        setCurrentBalance(income - expenses);
+    };
 
     const handleMonthChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedMonth(Number(event.target.value))
-    }
+        setSelectedMonth(Number(event.target.value));
+    };
 
     const handleYearChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedYear(Number(event.target.value))
-    }
+        setSelectedYear(Number(event.target.value));
+    };
 
     return (
         <div className="reports-page">
@@ -52,7 +51,9 @@ export default function ReportsPage() {
                     Month:
                     <select value={selectedMonth} onChange={handleMonthChange}>
                         {[...Array(12).keys()].map(month => (
-                            <option key={month + 1} value={month + 1}>{month + 1}</option>
+                            <option key={month + 1} value={month + 1}>
+                                {month + 1}
+                            </option>
                         ))}
                     </select>
                 </label>
@@ -60,7 +61,9 @@ export default function ReportsPage() {
                     Year:
                     <select value={selectedYear} onChange={handleYearChange}>
                         {[...Array(5).keys()].map(year => (
-                            <option key={year + 2020} value={year + 2020}>{year + 2020}</option>
+                            <option key={year + 2020} value={year + 2020}>
+                                {year + 2020}
+                            </option>
                         ))}
                     </select>
                 </label>
@@ -74,8 +77,8 @@ export default function ReportsPage() {
             <div className="transactions">
                 <h2>Transactions</h2>
                 <ul>
-                    {transactions.map((transaction, index) => (
-                        <li key={index}>
+                    {transactions.map((transaction) => (
+                        <li key={transaction.id}>
                             <p><strong>Date:</strong> {transaction.date}</p>
                             <p><strong>Amount:</strong> {transaction.amount.toFixed(2)} €</p>
                             <p><strong>Account:</strong> {transaction.account}</p>
@@ -89,4 +92,3 @@ export default function ReportsPage() {
         </div>
     );
 }
-

@@ -5,11 +5,10 @@ import {Transaction, TransactionDto} from "./model/Transaction.ts"
 import axios from "axios";
 import {Route, Routes} from "react-router-dom"
 import AddTransactionPage from "./pages/AddTransactionPage.tsx"
-import Dashboard from "./components/Header"
+import Dashboard from "./components/Header.tsx"
 import IncomePage from "./pages/IncomePage.tsx"
 import ExpensesPage from "./pages/ExpensesPage.tsx"
 import ReportsPage from "./pages/ReportsPage.tsx"
-
 
 
  export default function App() {
@@ -34,7 +33,7 @@ import ReportsPage from "./pages/ReportsPage.tsx"
      }
 
      const updateTransaction = (id: string, transaction: TransactionDto) => {
-         axios.put(`/api/transactions/${id}`, transaction)  // Попробуйте без /update
+         axios.put(`/api/transactions/${id}`, transaction)
              .then((response) => response.status === 200 && fetchTransactions())
              .catch((error) => console.log(error.response.data));
      }
