@@ -1,0 +1,75 @@
+.transaction-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.transaction-table th, .transaction-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+
+.transaction-table th:nth-child(1),
+.transaction-table td:nth-child(1) {
+    width: 100px;
+}
+
+.transaction-table th:nth-child(2),
+.transaction-table td:nth-child(2) {
+    width: 100px;
+}
+
+.transaction-table th:nth-child(3),
+.transaction-table td:nth-child(3) {
+    width: 130px;
+}
+
+.transaction-table th:nth-child(4),
+.transaction-table td:nth-child(4) {
+    width: 130px;
+}
+
+.transaction-table th:nth-child(5),
+.transaction-table td:nth-child(5) {
+    width: 110px;
+}
+
+.transaction-table td:nth-child(5) {
+    text-align: right;
+}
+.transaction-table th {
+    background-color: #f2f2f2;
+    cursor: pointer;
+}
+
+.transaction-table th:hover {
+    background-color: #ddd;
+}
+
+
+.transaction-table td button {
+    font-size: 12px;
+    padding: 4px 8px;
+    margin-right: 3px;
+}
+
+.add-new-button {
+    display: block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 15px;
+    background-color: white;
+    color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    width: max-content;
+    align-self: center;
+}
+
+.add-new-button:hover {
+    background-color: lightskyblue;
+}

@@ -1,0 +1,42 @@
+.reports-page {
+    margin-left: 200px;
+    padding: 20px;
+    color: #333;
+    background-color: #f8f9fa;
+    box-sizing: border-box;
+    min-height: 100vh;
+}
+
+
+.filters {
+    margin-bottom: 20px;
+}
+
+.filters label {
+    margin-right: 20px;
+}
+
+.summary {
+    margin-top: 20px;
+}
+
+.summary h2 {
+    margin-bottom: 10px;
+}
+
+.transactions {
+    margin-top: 20px;
+}
+
+.transactions h2 {
+    margin-bottom: 10px;
+}
+
+.transactions ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.transactions li {
+    margin-bottom: 15px;
+}

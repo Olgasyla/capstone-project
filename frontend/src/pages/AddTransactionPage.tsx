@@ -10,7 +10,6 @@ type FetchProps ={fetchTransactions: () => void}
 export default function AddTransaction ({fetchTransactions}: Readonly<FetchProps>) {
 
     const [transaction, setTransaction] = useState<TransactionDto>({
-        name: "",
         date: "",
         amount: 0,
         account: "NONE",

@@ -7,7 +7,6 @@ import java.time.LocalDate;
 public record Transaction (
 
         String id,
-        String name,
         LocalDate date,
         Double amount,
         Account account,
