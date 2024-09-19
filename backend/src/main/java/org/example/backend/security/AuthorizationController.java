@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
-
 
 @RestController
 @RequestMapping("/api/users")
@@ -22,13 +20,4 @@ public class AuthorizationController {
 
     }
 }
-
-
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        if (auth instanceof OAuth2AuthenticationToken token) {
-//            return token.getPrincipal().getAttributes().get("login").toString();
-//        }
-//          public String getLoggedInUser(@AuthenticationPrincipal OAuth2User user) {
-//            return auth.getName();
-//    }
 

@@ -1,3 +1,4 @@
+package org.example.backend;
 
 import org.example.backend.model.Account;
 import org.example.backend.model.Category;

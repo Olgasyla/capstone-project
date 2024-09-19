@@ -18,7 +18,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -30,20 +29,20 @@ public class SecurityConfig {
     private final AppUserRepository appUserRepository;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, HttpSecurity httpSecurity) throws Exception {
-    http
-            .csrf(AbstractHttpConfigurer::disable)
-            .sessionManagement(s ->s.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
-            .exceptionHandling(e->e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-            .oauth2Login(o ->o.defaultSuccessUrl(appUrl))
-            .logout(l -> l.logoutSuccessUrl(appUrl))
-            .authorizeHttpRequests(a->a
-                    .requestMatchers("api/transactions.**").authenticated()
-                    .anyRequest().permitAll());
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+                .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                .oauth2Login(o -> o.defaultSuccessUrl(appUrl))
+                .logout(l -> l.logoutSuccessUrl(appUrl))
+                .authorizeHttpRequests(a -> a
+                        .requestMatchers("api/transactions.**").authenticated()
+                        .anyRequest().permitAll());
 
         return http.build();
-
     }
+
     @Bean
     public OAuth2UserService<OAuth2UserRequest, OAuth2User> userService() {
         DefaultOAuth2UserService userService = new DefaultOAuth2UserService();
@@ -51,7 +50,7 @@ public class SecurityConfig {
         return (userRequest) -> {
             OAuth2User githubUser = userService.loadUser(userRequest);
 
-            AppUser user = appUserRepository.findById(githubUser.getName())
+             appUserRepository.findById(githubUser.getName())
                     .orElseGet(() -> {
                         AppUser newUser = new AppUser(githubUser.getName(),
                                 githubUser.getAttributes().get("login").toString(),
