@@ -5,6 +5,9 @@ import org.example.backend.model.Transaction;
 import org.example.backend.model.TransactionDto;
 import org.example.backend.model.TransactionType;
 import org.example.backend.repository.TransactionRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -20,7 +23,22 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final IdService idService;
 
+
+//    private String getCurrentUserId() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication != null && authentication.getPrincipal() instanceof OAuth2User) {
+//            OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+//            return oAuth2User.getName(); // ID GitHub пользователя
+//        }
+//        throw new RuntimeException("User not authenticated");
+//    }
+
     public List<Transaction> findAllTransactions() {
+//        String currentUserId = getCurrentUserId();
+//        return transactionRepository.findAll().stream()
+//                .filter(transaction -> transaction.appUserId().equals(currentUserId))
+//                .toList();
+//    }
         return transactionRepository.findAll();
     }
     public Transaction findTransactionById(String id) {return transactionRepository.findById(id)
@@ -34,7 +52,8 @@ public class TransactionService {
                 transactionDto.account(),
                 transactionDto.description(),
                 transactionDto.category(),
-                transactionDto.type());
+                transactionDto.type(),
+                transactionDto.appUserId());
         return transactionRepository.save(transaction);
     }
 
@@ -46,8 +65,9 @@ public class TransactionService {
                 .withAccount(updateTransaction.account())
                 .withDescription(updateTransaction.description())
                 .withCategory(updateTransaction.category())
-                .withType(updateTransaction.type());
-                return transactionRepository.save(transaction);
+                .withType(updateTransaction.type())
+                .withAppUserId(updateTransaction.appUserId());
+        return transactionRepository.save(transaction);
     }
     public void deleteTransaction(String id) {
         transactionRepository.deleteById(id);
@@ -70,9 +90,9 @@ public class TransactionService {
                         transaction.account(),
                         transaction.description(),
                         transaction.category(),
-                        transaction.type()
+                        transaction.type(),
+                        transaction.appUserId()
                 ))
                 .toList();
     }
-    }
-
+}

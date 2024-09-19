@@ -26,6 +26,7 @@ export default function ExpensesPage({data, deleteTransaction, updateTransaction
         description: "",
         category: "OTHER",
         type: "EXPENSE",
+        appUserId: ""
     })
 
     const [selectedTransactionId, setSelectedTransactionId] = useState<string | null>(null);
@@ -48,6 +49,7 @@ export default function ExpensesPage({data, deleteTransaction, updateTransaction
             description: "",
             category: "OTHER",
             type: "EXPENSE",
+            appUserId: ""
         });
         setIsEditing(null);
         setIsExpensesModalOpen(true);
@@ -61,6 +63,7 @@ export default function ExpensesPage({data, deleteTransaction, updateTransaction
             description: transaction.description,
             category: transaction.category,
             type: transaction.type,
+            appUserId: transaction.appUserId
         })
         setIsEditing(transaction.id)
         setIsExpensesModalOpen(true)

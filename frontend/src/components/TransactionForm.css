@@ -1,64 +1,36 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
+.transaction-form {
     display: flex;
-    background-color: #f8f9fa;
+    flex-direction: column;
+    gap: 20px; /* Расстояние между секциями */
 }
 
-.header {
-    width: 150px;
-    height: 100vh;
-    background-color: #f8f9fa;
-    padding: 20px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    top: 0;
-    left: 0;
+.form-grid {
+    display: grid;
+    grid-template-columns: 150px 1fr; /* Две колонки: первая для лейблов, вторая для инпутов */
+    gap: 10px 20px; /* Расстояние между строками и колонками */
+    align-items: center;
 }
 
-.header h1 {
-    margin-bottom: 20px;
-    color: #333;
-    font-size: 20px;
-    text-align: center;
+.transaction-label {
+    font-weight: bold;
+    text-align: right; /* Лейблы выравниваются по правому краю */
 }
 
-.header nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.header nav ul li {
-    margin-bottom: 15px;
-}
-
-.header nav ul li a {
-    display: block;
-    text-decoration: none;
-    color: #007bff;
-    font-size: 16px;
-    padding: 4px;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-}
-
-.header nav ul li a:hover {
-    background-color: #e0e0e0;
-}
-
-.header nav ul li a.active {
-    background-color: #d3d3d3;
-    color: #007bff;
-}
-
-.main-content {
-    margin-left: 170px;
-    padding: 40px;
-    color: #333333;
-    width: calc(100% - 170px);
+input,
+select,
+textarea {
+    padding: 8px;
+    font-size: 14px;
+    width: 100%;
     box-sizing: border-box;
-    min-height: 100vh;
-    background-color: #f8f9fa;
-    border-radius: 0;
-    box-shadow: none;
+}
+
+button {
+    align-self: flex-end;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
 }

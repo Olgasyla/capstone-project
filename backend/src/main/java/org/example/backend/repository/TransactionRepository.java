@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 public interface TransactionRepository extends MongoRepository<Transaction, String> {
 
-    List<Transaction> findAllByDateBetween(Instant startDate, Instant endDate);
+    List<Transaction> findAllByDateBetween( Instant startDate, Instant endDate);
 }
