@@ -22,17 +22,18 @@ class TransactionServiceTest {
     private final IdService idService = mock(IdService.class);
     private final TransactionService transactionService = new TransactionService(transactionRepository, idService);
     private final LocalDate localDate = LocalDate.parse("2024-09-01");
+    String appUserId = "user123";
 
     @Test
     void findAllTransactionsTest() {
         //GIVEN
         List<Transaction> getAllTransactions = List.of(
-                new Transaction("1",  localDate, 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE),
-                new Transaction("2",  localDate, 32.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE));
+                new Transaction("1",  localDate, 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE, appUserId),
+                new Transaction("2",  localDate, 32.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE, appUserId));
         //WHEN
         List<Transaction> expectedTransactions = List.of(
-                new Transaction("1",  localDate, 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE),
-                new Transaction("2", localDate, 32.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE));
+                new Transaction("1",  localDate, 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE, appUserId),
+                new Transaction("2", localDate, 32.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE, appUserId));
         when(transactionRepository.findAll()).thenReturn(getAllTransactions);
         List<Transaction> actualTransactions = transactionService.findAllTransactions();
         //THEN
@@ -43,12 +44,12 @@ class TransactionServiceTest {
     @Test
     void findTransactionByIdTest() {
         //GIVEN
-        Transaction transaction = new Transaction("3",  localDate, 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE);
+        Transaction transaction = new Transaction("3",  localDate, 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE, appUserId);
         when(transactionRepository.findById("3")).thenReturn(Optional.of(transaction));
         //WHEN
         Transaction actual = transactionService.findTransactionById("3");
         //THEN
-        Transaction expected = new Transaction("3",  localDate, 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE);
+        Transaction expected = new Transaction("3",  localDate, 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE, appUserId);
         verify(transactionRepository).findById("3");
         assertEquals(expected, actual);
     }
@@ -57,18 +58,29 @@ class TransactionServiceTest {
     void saveNewTransactionTest() {
         //GIVEN
         //WHEN
-        TransactionDto transactionDto = new TransactionDto( localDate, 12.5, Account.WALLET, "Cinema", Category.ENTERTAINMENT, TransactionType.EXPENSE);
+        TransactionDto transactionDto = new TransactionDto( localDate, 12.5, Account.WALLET, "Cinema", Category.ENTERTAINMENT, TransactionType.EXPENSE,appUserId);
         Transaction toSave = new Transaction("4",
-                transactionDto.date(), transactionDto.amount(), transactionDto.account(), transactionDto.description(),
-                transactionDto.category(),transactionDto.type());
+                transactionDto.date(),
+                transactionDto.amount(),
+                transactionDto.account(),
+                transactionDto.description(),
+                transactionDto.category(),
+                transactionDto.type(),
+                transactionDto.appUserId());
         when(transactionRepository.save(toSave)).thenReturn(toSave);
         when(idService.randomId()).thenReturn(toSave.id());
 
         //WHEN
         Transaction actual = transactionService.saveNewTransaction(transactionDto);
         //THEN
-        Transaction expected = new Transaction("4",transactionDto.date(), transactionDto.amount(), transactionDto.account(), transactionDto.description(),
-                transactionDto.category(),transactionDto.type());
+        Transaction expected = new Transaction(
+                "4",transactionDto.date(),
+                transactionDto.amount(),
+                transactionDto.account(),
+                transactionDto.description(),
+                transactionDto.category(),
+                transactionDto.type(),
+                transactionDto.appUserId());
         verify(transactionRepository).save(toSave);
         verify(idService).randomId();
         assertEquals(expected, actual);
@@ -78,8 +90,8 @@ class TransactionServiceTest {
     void updateTransactionTest() {
         //GIVEN
         String id = "4";
-        TransactionDto transactionDto = new TransactionDto( localDate, 12.5, Account.WALLET, "Cinema", Category.ENTERTAINMENT, TransactionType.EXPENSE);
-        Transaction transaction = new Transaction(id,localDate, 12.5, Account.WALLET, "Cinema", Category.ENTERTAINMENT, TransactionType.EXPENSE);
+        TransactionDto transactionDto = new TransactionDto( localDate, 12.5, Account.WALLET, "Cinema", Category.ENTERTAINMENT, TransactionType.EXPENSE, appUserId);
+        Transaction transaction = new Transaction(id,localDate, 12.5, Account.WALLET, "Cinema", Category.ENTERTAINMENT, TransactionType.EXPENSE, appUserId);
         when(transactionRepository.findById(id)).thenReturn(Optional.of(transaction));
         when(transactionRepository.save(transaction)).thenReturn(transaction);
 
@@ -104,8 +116,8 @@ class TransactionServiceTest {
         Instant startDate = YearMonth.of(2024, 9).atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant().atZone(ZoneId.systemDefault()).toInstant().minusSeconds(1);
         Instant endDate = YearMonth.of(2024, 9).atEndOfMonth().atTime(23, 59, 58).atZone(ZoneId.systemDefault()).toInstant();
 
-        Transaction transaction1 = new Transaction("1",  LocalDate.parse("2024-09-01"), 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE);
-        Transaction transaction2 = new Transaction("2",  LocalDate.parse("2024-09-05"), 75.0, Account.BANK, "Zara", Category.CLOTHES, TransactionType.EXPENSE);
+        Transaction transaction1 = new Transaction("1",  LocalDate.parse("2024-09-01"), 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE, appUserId);
+        Transaction transaction2 = new Transaction("2",  LocalDate.parse("2024-09-05"), 75.0, Account.BANK, "Zara", Category.CLOTHES, TransactionType.EXPENSE, appUserId);
 
         List<Transaction> transactions = List.of(transaction1, transaction2);
 
@@ -116,8 +128,8 @@ class TransactionServiceTest {
 
         // THEN
         List<TransactionDto> expected = List.of(
-                new TransactionDto( LocalDate.parse("2024-09-01"), 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE),
-                new TransactionDto( LocalDate.parse("2024-09-05"), 75.0, Account.BANK, "Zara", Category.CLOTHES, TransactionType.EXPENSE)
+                new TransactionDto( LocalDate.parse("2024-09-01"), 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE, appUserId),
+                new TransactionDto( LocalDate.parse("2024-09-05"), 75.0, Account.BANK, "Zara", Category.CLOTHES, TransactionType.EXPENSE, appUserId)
         );
         verify(transactionRepository).findAllByDateBetween(startDate, endDate);
         assertEquals(expected, actual);
@@ -126,8 +138,8 @@ class TransactionServiceTest {
     @Test
     void findTransactionsByTypeTest() {
         // GIVEN
-        Transaction transaction1 = new Transaction("1",  localDate, 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE);
-        Transaction transaction2 = new Transaction("2",  LocalDate.parse("2024-08-25"), 1500.0, Account.BANK, "Work", Category.OTHER, TransactionType.INCOME);
+        Transaction transaction1 = new Transaction("1",  localDate, 52.5, Account.BANK, "Aldi", Category.FOOD, TransactionType.EXPENSE, appUserId);
+        Transaction transaction2 = new Transaction("2",  LocalDate.parse("2024-08-25"), 1500.0, Account.BANK, "Work", Category.OTHER, TransactionType.INCOME, appUserId);
 
         List<Transaction> transactions = List.of(transaction1, transaction2);
         when(transactionRepository.findAll()).thenReturn(transactions);
@@ -140,4 +152,4 @@ class TransactionServiceTest {
         verify(transactionRepository).findAll();
         assertEquals(expected, actual);
     }
-    }
+}

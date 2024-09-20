@@ -12,5 +12,7 @@ public record Transaction (
         Account account,
         String description,
         Category category,
-        TransactionType type)
+        TransactionType type,
+        String appUserId
+)
 {}

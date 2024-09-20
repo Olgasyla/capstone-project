@@ -1,5 +1,5 @@
 
-export type AccountType = 'NONE' | 'BANK' | 'WALLET' | 'PAYPAL';
+export type AccountType = 'NONE' | 'BANK' | 'WALLET' | 'PAYPAL' | 'CASH';
 
 export type CategoryType =
     | 'RENT'
@@ -29,7 +29,8 @@ export type Transaction = {
     account: AccountType,
     description: string,
     category: CategoryType,
-    type: TransactionType
+    type: TransactionType,
+    appUserId: string
 }
 
 export type TransactionDto = {
@@ -39,4 +40,5 @@ export type TransactionDto = {
     description: string,
     category: CategoryType,
     type: TransactionType
+    appUserId: string;
 }

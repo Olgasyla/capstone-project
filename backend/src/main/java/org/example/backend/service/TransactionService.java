@@ -20,6 +20,7 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final IdService idService;
 
+
     public List<Transaction> findAllTransactions() {
         return transactionRepository.findAll();
     }
@@ -34,7 +35,8 @@ public class TransactionService {
                 transactionDto.account(),
                 transactionDto.description(),
                 transactionDto.category(),
-                transactionDto.type());
+                transactionDto.type(),
+                transactionDto.appUserId());
         return transactionRepository.save(transaction);
     }
 
@@ -46,8 +48,9 @@ public class TransactionService {
                 .withAccount(updateTransaction.account())
                 .withDescription(updateTransaction.description())
                 .withCategory(updateTransaction.category())
-                .withType(updateTransaction.type());
-                return transactionRepository.save(transaction);
+                .withType(updateTransaction.type())
+                .withAppUserId(updateTransaction.appUserId());
+        return transactionRepository.save(transaction);
     }
     public void deleteTransaction(String id) {
         transactionRepository.deleteById(id);
@@ -70,9 +73,9 @@ public class TransactionService {
                         transaction.account(),
                         transaction.description(),
                         transaction.category(),
-                        transaction.type()
+                        transaction.type(),
+                        transaction.appUserId()
                 ))
                 .toList();
     }
-    }
-
+}

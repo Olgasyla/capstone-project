@@ -3,11 +3,13 @@ import {FormEvent, useState} from 'react'
 import TransactionForm from '../components/TransactionForm'
 import { useNavigate } from 'react-router-dom'
 import {TransactionDto} from "../model/Transaction.ts"
-import axios from "axios"
 
-type FetchProps ={fetchTransactions: () => void}
 
-export default function AddTransaction ({fetchTransactions}: Readonly<FetchProps>) {
+type FetchProps ={
+    addTransaction: (transaction: TransactionDto) => void;
+}
+
+export default function AddTransaction ({ addTransaction}: Readonly<FetchProps>) {
 
     const [transaction, setTransaction] = useState<TransactionDto>({
         date: "",
@@ -15,15 +17,13 @@ export default function AddTransaction ({fetchTransactions}: Readonly<FetchProps
         account: "NONE",
         description: "",
         category: "FOOD",
-        type: "EXPENSE"
+        type: "EXPENSE",
+        appUserId: ""
     })
     const navigate = useNavigate()
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        axios.post("/api/transactions", transaction)
-            .then(response => console.log(response))
-            .then(() => fetchTransactions())
-            .catch(error => console.log(error))
+        addTransaction(transaction)
 
         navigate("/transactions")
     }

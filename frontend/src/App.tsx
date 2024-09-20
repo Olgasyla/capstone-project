@@ -2,30 +2,34 @@
 import Header from "./components/Header"
 import {useEffect, useState} from "react"
 import {Transaction, TransactionDto} from "./model/Transaction.ts"
-import axios from "axios";
+import axios, {AxiosResponse} from "axios"
 import {Route, Routes} from "react-router-dom"
 import AddTransactionPage from "./pages/AddTransactionPage.tsx"
 import Dashboard from "./components/Header.tsx"
 import IncomePage from "./pages/IncomePage.tsx"
 import ExpensesPage from "./pages/ExpensesPage.tsx"
 import ReportsPage from "./pages/ReportsPage.tsx"
-
+import ProtectedRoutes from "./components/ProtectedRoutes.tsx"
+import {AppUser} from "./model/AppUser.ts"
+import './App.css'
+import {FaGithub} from "react-icons/fa"
 
  export default function App() {
 
-    // const [user, setUser] = useState<string | null | undefined>(undefined)
+     const [user, setUser] = useState<AppUser | null | undefined>(undefined)
      const [data, setData] = useState<Transaction[]>([])
 
      const fetchTransactions = () => {
-
+         if (user) {
          axios.get('/api/transactions')
-             .then(response => {
-                 setData(response.data)
+             .then((response : AxiosResponse<Transaction[]> )=> {
+                 setData(response.data
+                     .filter(transaction => transaction.appUserId == user.id))
              })
              .catch(error => {
                  console.error("Es gab einen Fehler beim Abrufen der Daten!", error);
              })
-     }
+     }}
      const deleteTransaction = (id: string) => {
          axios.delete("/api/transactions/" + id)
              .then((response) => response.status === 200 && fetchTransactions())
@@ -39,10 +43,30 @@ import ReportsPage from "./pages/ReportsPage.tsx"
      }
 
      const addTransaction = (transaction: TransactionDto) => {
-         axios.post("/api/transactions", transaction)
-             .then((response) => response.status === 200 && fetchTransactions())
-             .catch((error) => console.log(error.message));
-     };
+         if (user) {
+             axios.post("/api/transactions", {...transaction, appUserId: user.id})
+                 .then((response) => response.status === 200 && fetchTransactions())
+                 .catch((error) => console.log(error.message));
+         }}
+
+     const login = () => {
+         const host = window.location.host === 'localhost:5173' ? 'http://localhost:8080': window.location.origin
+         window.open(host + '/oauth2/authorization/github', '_self')
+     }
+     const getUser =() =>{
+         axios.get("api/users/me")
+             .then((response)=> {
+                 console.log(response.data)
+                 setUser(response.data)
+             })
+             .catch(()=>{
+                 setUser(null) })
+             }
+
+     function logout() {
+         const host = window.location.host === 'localhost:5173' ? 'http://localhost:8080' : window.location.origin
+         window.open(host + '/logout', '_self')
+     }
 
      // const [searchInput, setSearchInput] = useState("")
      //
@@ -50,37 +74,63 @@ import ReportsPage from "./pages/ReportsPage.tsx"
      //     .filter((transaction) => transaction.type?.toLowerCase().includes(searchInput.toLowerCase()) ||
      //         transaction.category?.toLowerCase().includes(searchInput.toLowerCase()))
 
-     useEffect(() => {
-         fetchTransactions()
-     }, [])
+     useEffect(getUser,[]);
+
+     useEffect(() => {fetchTransactions()}, [user])
 
     return (
         <>
-        <Header />
-        <Routes>
-            <Route path="/" element={<Dashboard />} />
+            { !user ? (
+                <div className="login-screen">
+                    <h1>Personal Finance Tracker</h1>
+                    <button onClick={login} className="github-button">
+                        <FaGithub style={{marginRight: '8px'}}/> Login with GitHub
+                    </button>
+                </div>) : (
+                <>
+                    <Header/>
+                    <div className="main-content">
 
-            <Route path="transaction/add" element={<AddTransactionPage fetchTransactions={fetchTransactions}/>} />
-            <Route path="/reports" element={<ReportsPage />} />
-            <Route path="/income" element={
-                <IncomePage
-                    data={data}
-                    deleteTransaction={deleteTransaction}
-                    updateTransaction={updateTransaction}
-                    addTransaction={addTransaction}
-                />}
-            />
-            <Route path="/expense" element={
-                <ExpensesPage
-                    data={data}
-                    deleteTransaction={deleteTransaction}
-                    updateTransaction={updateTransaction}
-                    addTransaction={addTransaction}
-                />}
-            />
-        </Routes>
+                        {user && <button onClick={logout} className="github-button">Logout</button>}
+                        <p>Welcome, {user?.username}</p>
+                        {user?.avatarUrl && (
+                            <img
+                                src={user.avatarUrl}
+                                alt={`${user.username}'s avatar`}
+                                style={{width: '40px', height: '40px', borderRadius: '50%'}}
+                            />
+                        )}
+
+                        <Routes>
+                            {/*<Route path={"/register"} element={<RegisterPage />}/>*/}
+                            <Route element={<ProtectedRoutes user={user}/>}>
+                                <Route path="/" element={<Dashboard/>}/>
+                                <Route path="transaction/add"
+                                       element={<AddTransactionPage addTransaction={addTransaction}/>}/>
+                                <Route path="/reports" element={<ReportsPage/>}/>
+                                <Route path="/income" element={
+                                    <IncomePage
+                                        data={data}
+                                        deleteTransaction={deleteTransaction}
+                                        updateTransaction={updateTransaction}
+                                        addTransaction={addTransaction}
+                                    />}
+                                />
+                                <Route path="/expense" element={
+                                    <ExpensesPage
+                                        data={data}
+                                        deleteTransaction={deleteTransaction}
+                                        updateTransaction={updateTransaction}
+                                        addTransaction={addTransaction}
+                                    />}
+                                />
+                            </Route>
+                        </Routes>
+                    </div>
+                </>
+            )
+            }
         </>
     )
-}
-
+ }
 

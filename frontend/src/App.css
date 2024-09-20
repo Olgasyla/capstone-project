@@ -1,1 +1,42 @@
+/* App.css */
+.login-screen {
+    display: flex;
+    flex-direction: column;
+    background-image: url("../assets/background.png");
+
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f8f9fa;
+}
+
+.login-screen h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.login-screen button {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-screen button:hover {
+    background-color: #0056b3;
+}
+
+.main-content {
+    margin-left: 170px;
+    padding: 40px;
+    color: #333333;
+    width: calc(100% - 170px);
+    box-sizing: border-box;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
 
