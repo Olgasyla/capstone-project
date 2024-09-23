@@ -7,7 +7,7 @@ body {
 }
 
 .header {
-    width: 150px;
+    width: 220px;
     height: 100vh;
     background-color: #f8f9fa;
     padding: 20px;
@@ -15,7 +15,6 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    background-image: url('/images/background.jpg');
     background-size: cover;
     background-position: center;
 }
@@ -58,17 +57,20 @@ body {
     background-color: #d3d3d3;
     color: #007bff;
 }
+.header-title {
+    font-family: Arial, sans-serif;
+    font-size: 2.5rem;
+    color: #007bff;
+    text-align: center;
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+}
 
-.main-content {
-    margin-left: 170px;
-    padding: 40px;
-    color: #333333;
-    width: calc(100% - 170px);
-    box-sizing: border-box;
-    min-height: 100vh;
-    background-color: #f8f9fa;
-    border-radius: 0;
-    box-shadow: none;
+.header-title i {
+    margin-right: 10px;
+    font-size: 1.5rem;
+    color: #007bff;
 }
 
 

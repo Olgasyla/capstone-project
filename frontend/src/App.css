@@ -1,37 +1,88 @@
-/* App.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    overflow-y: auto;
+}
 .login-screen {
     display: flex;
     flex-direction: column;
-    background-image: url("../assets/background.png");
-
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     height: 100vh;
-    background-color: #f8f9fa;
+    width: 100vw;
+    background-image: url("./assets/background.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #0056b3;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    padding-top: 100px;
+}
+
+#root {
+    height: 100%;
 }
 
 .login-screen h1 {
-    font-size: 36px;
+    font-size: 48px;
     margin-bottom: 20px;
+    text-align: center;
 }
-
-.login-screen button {
+.github-button {
     padding: 10px 20px;
     font-size: 18px;
     background-color: #007bff;
-    color: white;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    margin: 20px auto;
+    display: block;
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.5);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.github-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 123, 255, 0.6);
+}
+.user-info {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logout-button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
-
-.login-screen button:hover {
-    background-color: #0056b3;
+.logout-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 123, 255, 0.6);
 }
-
+.user-info {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
 .main-content {
-    margin-left: 170px;
-    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 120px;
+    padding: 20px;
     color: #333333;
     width: calc(100% - 170px);
     box-sizing: border-box;
