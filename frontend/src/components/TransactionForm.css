@@ -1,19 +1,19 @@
 .transaction-form {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Расстояние между секциями */
+    gap: 20px;
 }
 
 .form-grid {
     display: grid;
-    grid-template-columns: 150px 1fr; /* Две колонки: первая для лейблов, вторая для инпутов */
-    gap: 10px 20px; /* Расстояние между строками и колонками */
+    grid-template-columns: 150px 1fr;
+    gap: 10px 20px;
     align-items: center;
 }
 
 .transaction-label {
     font-weight: bold;
-    text-align: right; /* Лейблы выравниваются по правому краю */
+    text-align: right;
 }
 
 input,
@@ -31,6 +31,7 @@ button {
     background-color: #007bff;
     color: white;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
 }

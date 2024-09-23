@@ -5,7 +5,7 @@ import {Transaction, TransactionDto} from "./model/Transaction.ts"
 import axios, {AxiosResponse} from "axios"
 import {Route, Routes} from "react-router-dom"
 import AddTransactionPage from "./pages/AddTransactionPage.tsx"
-import Dashboard from "./components/Header.tsx"
+import Dashboard from "./components/Dashboard.tsx"
 import IncomePage from "./pages/IncomePage.tsx"
 import ExpensesPage from "./pages/ExpensesPage.tsx"
 import ReportsPage from "./pages/ReportsPage.tsx"
@@ -14,7 +14,7 @@ import {AppUser} from "./model/AppUser.ts"
 import './App.css'
 import {FaGithub} from "react-icons/fa"
 
- export default function App() {
+export default function App() {
 
      const [user, setUser] = useState<AppUser | null | undefined>(undefined)
      const [data, setData] = useState<Transaction[]>([])
@@ -68,15 +68,9 @@ import {FaGithub} from "react-icons/fa"
          window.open(host + '/logout', '_self')
      }
 
-     // const [searchInput, setSearchInput] = useState("")
-     //
-     // const filteredTransaction: Transaction[] = data
-     //     .filter((transaction) => transaction.type?.toLowerCase().includes(searchInput.toLowerCase()) ||
-     //         transaction.category?.toLowerCase().includes(searchInput.toLowerCase()))
 
      useEffect(getUser,[]);
-
-     useEffect(() => {fetchTransactions()}, [user])
+     useEffect(() => {fetchTransactions()}, [user]);
 
     return (
         <>
@@ -88,21 +82,21 @@ import {FaGithub} from "react-icons/fa"
                     </button>
                 </div>) : (
                 <>
-                    <Header/>
+                    <Header />
                     <div className="main-content">
-
-                        {user && <button onClick={logout} className="github-button">Logout</button>}
-                        <p>Welcome, {user?.username}</p>
-                        {user?.avatarUrl && (
-                            <img
-                                src={user.avatarUrl}
-                                alt={`${user.username}'s avatar`}
-                                style={{width: '40px', height: '40px', borderRadius: '50%'}}
-                            />
-                        )}
+                        <div className="user-info">
+                            {user?.avatarUrl && (
+                                <img
+                                    src={user.avatarUrl}
+                                    alt={`${user.username}'s avatar`}
+                                    style={{width: '40px', height: '40px', borderRadius: '50%'}}
+                                />
+                            )}
+                            <p>{user?.username}</p>
+                            {user && <button onClick={logout} className="logout-button">Logout</button>}
+                        </div>
 
                         <Routes>
-                            {/*<Route path={"/register"} element={<RegisterPage />}/>*/}
                             <Route element={<ProtectedRoutes user={user}/>}>
                                 <Route path="/" element={<Dashboard/>}/>
                                 <Route path="transaction/add"
